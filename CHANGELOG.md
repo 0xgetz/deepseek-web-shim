@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-09-14
+
+### Fixed
+- A non-JSON response from upstream (an HTML WAF interstitial, a gateway error
+  page, an empty body) surfaced as a bare `ValueError` out of `r.json()`, naming
+  neither the step that failed nor what came back. Those are ordinary answers
+  from this backend, so each is now a named `RuntimeError` carrying the status
+  and a slice of the body.
+
+### Added
+- `tests/test_client_wire.py`: the client's real HTTP layer is now driven by a
+  fake transport. The wire contract was previously untested — the browser
+  identity headers, the TLS impersonation profile, the warmup request, the
+  contents of `x-ds-pow-response`, the exact body sent to
+  `/api/v0/chat/completion`, SSE parsing (half-lines and keepalives included),
+  and the error path for every step. Test suite: 74 tests.
+
 ## [0.1.1] - 2026-09-14
 
 ### Fixed

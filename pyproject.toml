@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "deepseek-web-shim"
-version = "0.1.1"
+version = "0.1.2"
 description = "OpenAI-compatible local shim over DeepSeek's web chat backend (research tool)"
 readme = "README.md"
 requires-python = ">=3.9"

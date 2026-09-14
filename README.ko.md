@@ -7,7 +7,7 @@
     <a href="https://github.com/0xgetz/deepseek-web-shim/releases"><img src="https://img.shields.io/github/v/release/0xgetz/deepseek-web-shim?style=flat-square" alt="릴리스"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3fb950?style=flat-square" alt="MIT 라이선스"></a>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square" alt="Python 3.9+"></a>
-    <a href="tests"><img src="https://img.shields.io/badge/tests-54%20offline-2ea44f?style=flat-square" alt="오프라인 테스트 54개"></a>
+    <a href="tests"><img src="https://img.shields.io/badge/tests-74%20offline-2ea44f?style=flat-square" alt="오프라인 테스트 54개"></a>
   </p>
   <p>
     <a href="README.md">English</a> ·
@@ -87,7 +87,7 @@ OpenAI 호환 클라이언트를 `http://127.0.0.1:8712/v1`로 향하게 하세�
 ## 직접 검증하기
 
 ```bash
-PYTHONPATH=src python -m pytest tests/ -q          # 54 passed, 1 skipped, 0 failed
+PYTHONPATH=src python -m pytest tests/ -q          # 73 passed, 1 skipped, 0 failed
 PYTHONPATH=src python -m deepseek_web_shim --selftest
 # {"backend":"pure","planted":11,"pure_answer":11,"match":true}
 ```

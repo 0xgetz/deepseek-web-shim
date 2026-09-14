@@ -33,6 +33,20 @@ BASE = "https://chat.deepseek.com"
 IMPERSONATE = "chrome131"  # any recent real Chrome build defeats the TLS check
 
 
+def _json_or_die(r, what: str) -> dict[str, Any]:
+    """Parse a JSON response, or report what upstream actually sent.
+
+    A refused request can come back as an HTML WAF interstitial, an empty body,
+    or a gateway error page. Those are ordinary states for this backend, and
+    ``r.json()`` throwing a bare ValueError here would tell the caller nothing
+    about which step failed or what came back.
+    """
+    try:
+        return r.json()
+    except Exception:  # noqa: BLE001 — any parse failure is reportable
+        raise RuntimeError(f"{what} returned non-JSON ({r.status_code}): {r.text[:300]!r}")
+
+
 class DeepSeekWeb:
     def __init__(self, token: str | None = None, cookies: dict[str, str] | None = None,
                  impersonate: str = IMPERSONATE, proxy: str | None = None) -> None:
@@ -107,7 +121,7 @@ class DeepSeekWeb:
             json={"character_id": None},
             timeout=30,
         )
-        data = r.json()
+        data = _json_or_die(r, "chat_session/create")
         try:
             return data["data"]["biz_data"]["id"]
         except (KeyError, TypeError):
@@ -122,7 +136,7 @@ class DeepSeekWeb:
             timeout=30,
         )
         try:
-            return r.json()["data"]["biz_data"]["challenge"]
+            return _json_or_die(r, "create_pow_challenge")["data"]["biz_data"]["challenge"]
         except (KeyError, TypeError):
             raise RuntimeError(f"create_pow_challenge failed: {r.status_code} {r.text[:300]}")
 
@@ -153,7 +167,7 @@ class DeepSeekWeb:
         )
         if r.status_code != 200:
             raise RuntimeError(f"login http {r.status_code}: {r.text[:300]}")
-        data = r.json()
+        data = _json_or_die(r, "users/login")
         if data.get("code") not in (0, None):
             raise RuntimeError(f"login rejected: {json.dumps(data)[:300]}")
         token = (data.get("data") or {}).get("biz_data", {}).get("user", {}).get("token")

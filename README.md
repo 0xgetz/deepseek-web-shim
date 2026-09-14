@@ -7,7 +7,7 @@
     <a href="https://github.com/0xgetz/deepseek-web-shim/releases"><img src="https://img.shields.io/github/v/release/0xgetz/deepseek-web-shim?style=flat-square" alt="release"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3fb950?style=flat-square" alt="MIT license"></a>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square" alt="Python 3.9+"></a>
-    <a href="tests"><img src="https://img.shields.io/badge/tests-54%20offline-2ea44f?style=flat-square" alt="54 offline tests"></a>
+    <a href="tests"><img src="https://img.shields.io/badge/tests-74%20offline-2ea44f?style=flat-square" alt="74 offline tests"></a>
   </p>
   <p>
     <strong>English</strong> ·
@@ -87,7 +87,7 @@ Point any OpenAI-compatible client at `http://127.0.0.1:8712/v1`.
 ## Verify it yourself
 
 ```bash
-PYTHONPATH=src python -m pytest tests/ -q          # 54 passed, 1 skipped, 0 failed
+PYTHONPATH=src python -m pytest tests/ -q          # 73 passed, 1 skipped, 0 failed
 PYTHONPATH=src python -m deepseek_web_shim --selftest
 # {"backend":"pure","planted":11,"pure_answer":11,"match":true}
 ```
@@ -151,7 +151,7 @@ and removes every caveat on this page.
 ```
 src/deepseek_web_shim/   pow.py (verified hash + search), client.py (web flow),
                          server.py (OpenAI shim), config.py, __main__.py (CLI)
-tests/                   54 offline tests
+tests/                   74 offline tests
 research/                the scripts behind the conclusions, wrong turns included
 docs/                    protocol.md, intended-use.md
 scripts/fetch_wasm.py    optional wasm fetcher, prints the sha256
