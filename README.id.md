@@ -132,6 +132,21 @@ Semuanya lewat environment, tidak pernah ikut ter-commit. Lihat
 | `DSW_POW_BACKEND` | set ke `pure` untuk memaksa backend Python murni walau modulnya ada |
 | `DS_PROXY` | proxy residensial untuk leg keluar, jika IP Anda ditolak |
 
+## Apa yang sudah terbukti, dan apa yang belum
+
+Hitungan jujur, karena "jalan di mesin gue" tidak sama dengan "berfungsi".
+
+**Sudah terbukti**
+- Solver PoW mereproduksi modul wasm milik DeepSeek byte per byte, terhadap build asli yang sha256-nya dipatok. Kedua backend (Python murni, wasm) diuji.
+- Kontrak protokol, dipatok oleh `tests/test_client_wire.py` lewat transport palsu: header identitas browser, profil impersonation, request warmup, isi `x-ds-pow-response`, body persis yang dikirim ke `/api/v0/chat/completion`, dan parsing SSE termasuk penanganan baris rusak.
+- Server, CLI, konfigurasi dan penanganan sesi, lewat 74 tes offline.
+
+**Belum terbukti**
+- Perjalanan bolak-balik secara live. Tidak ada akun milik proyek ini, tidak ada kredensial yang ikut disertakan, dan tidak ada pendaftaran otomatis atau bypass CAPTCHA. Sisi server hulu diuji terhadap sesi pengganti, jadi yang terverifikasi adalah kontrak protokolnya, bukan balasan asli dari DeepSeek.
+- Apa pun soal akun lo, kuota, atau apakah jaringan lo bakal ditolak.
+
+Buat menutup jarak itu, lo sediakan sesi sendiri (lihat di atas) dan saksikan sendiri request pertamanya.
+
 ## Baca ini sebelum memakainya
 
 Ini alat riset, bukan cara pintas akses. Ia mengirim **tanpa kredensial**, tidak

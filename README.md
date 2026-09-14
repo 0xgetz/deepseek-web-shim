@@ -130,6 +130,21 @@ All via environment, never committed. See [`.env.example`](.env.example).
 | `DSW_POW_BACKEND` | set to `pure` to force the pure-Python backend even when a module is present |
 | `DS_PROXY` | residential proxy for the outbound leg, if your IP is refused |
 
+## What is proven, and what is not
+
+Honest accounting, because "it runs on my machine" is not the same as "it works".
+
+**Proven**
+- The PoW solver reproduces DeepSeek's own wasm module byte for byte, against a real build whose sha256 is pinned. Both backends (pure Python, wasm) are exercised.
+- The protocol contract, pinned by `tests/test_client_wire.py` through a fake transport: the browser identity headers, the impersonation profile, the warmup request, the contents of `x-ds-pow-response`, the exact body sent to `/api/v0/chat/completion`, and SSE parsing with its malformed-line handling.
+- The server, CLI, config and session handling, across 74 offline tests.
+
+**Not proven**
+- A live round trip. No account belongs to this project, no credentials ship with it, and no automated signup or CAPTCHA bypass is included. The upstream half is exercised against a stand-in session, so what is verified is the protocol contract, not a real reply from DeepSeek.
+- Anything about your account, your quota, or whether your network gets refused.
+
+To close that gap you supply a session of your own (see above) and watch the first request yourself.
+
 ## Read this before using it
 
 This is research tooling, not an access trick. It ships **no credentials**, it
