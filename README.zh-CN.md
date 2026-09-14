@@ -7,7 +7,7 @@
     <a href="https://github.com/0xgetz/deepseek-web-shim/releases"><img src="https://img.shields.io/github/v/release/0xgetz/deepseek-web-shim?style=flat-square" alt="发布"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3fb950?style=flat-square" alt="MIT 许可证"></a>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square" alt="Python 3.9+"></a>
-    <a href="tests"><img src="https://img.shields.io/badge/tests-51%20offline-2ea44f?style=flat-square" alt="51 个离线测试"></a>
+    <a href="tests"><img src="https://img.shields.io/badge/tests-54%20offline-2ea44f?style=flat-square" alt="54 个离线测试"></a>
   </p>
   <p>
     <a href="README.md">English</a> ·
@@ -84,7 +84,7 @@ PYTHONPATH=src DSW_API_KEY=local python -m deepseek_web_shim --serve
 ## 自己验证
 
 ```bash
-PYTHONPATH=src python -m pytest tests/ -q          # 51 passed, 1 skipped, 0 failed
+PYTHONPATH=src python -m pytest tests/ -q          # 54 passed, 1 skipped, 0 failed
 PYTHONPATH=src python -m deepseek_web_shim --selftest
 # {"backend":"pure","planted":11,"pure_answer":11,"match":true}
 ```
@@ -97,6 +97,7 @@ PYTHONPATH=src python -m deepseek_web_shim --selftest
 
 ```bash
 python scripts/fetch_wasm.py                       # 记录它拿到的 sha256
+python scripts/fetch_wasm.py --file ~/Downloads/sha3_wasm_bg.7b9ca65ddd.wasm   # 或者用你已经有的副本
 PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.py
 ```
 
@@ -115,11 +116,13 @@ PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.p
 
 | 变量 | 含义 |
 | --- | --- |
-| `DSW_API_KEY` | 客户端必须携带的密钥；不设则无鉴权（仅限本机） |
+| `DSW_API_KEY` | 客户端必须携带的密钥；必填，因为这个端口在你的会话前面 |
+| `DSW_ALLOW_NO_AUTH` | 设为 `1` 时有意不带密钥运行，仅限回环地址 |
 | `DSW_HOST` / `DSW_PORT` | 绑定地址，默认 `127.0.0.1:8712` |
 | `DS_TOKEN` | DeepSeek bearer token，可替代 `--session` |
 | `DSW_STATE_DIR` | 抓取到的会话存放位置 |
 | `DSW_WASM` | 可选 wasm 模块的路径 |
+| `DSW_POW_BACKEND` | 设为 `pure` 时即使模块存在也强制使用纯 Python 后端 |
 | `DS_PROXY` | 出站走住宅代理，用于你的 IP 被拒时 |
 
 ## 使用前请读
@@ -141,7 +144,7 @@ PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.p
 ```
 src/deepseek_web_shim/   pow.py（已校验的哈希与搜索）、client.py（网页流程）、
                          server.py（OpenAI 服务）、config.py、__main__.py（命令行）
-tests/                   51 个离线测试
+tests/                   54 个离线测试
 research/                支撑结论的脚本，包含走过的弯路
 docs/                    protocol.md、intended-use.md
 scripts/fetch_wasm.py    可选的 wasm 获取脚本，会打印 sha256

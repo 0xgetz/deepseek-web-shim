@@ -74,9 +74,27 @@ def test_chat_requires_the_configured_key(fake, http):
     assert r.status_code == 401
 
 
-def test_auth_is_off_when_no_key_is_configured(fake, http, monkeypatch):
-    monkeypatch.delenv("DSW_API_KEY")
+def test_missing_key_is_not_configured_rather_than_open(fake, http, monkeypatch):
+    """No DSW_API_KEY and no explicit opt-in must refuse, not quietly serve."""
+    monkeypatch.delenv("DSW_API_KEY", raising=False)
+    monkeypatch.delenv("DSW_ALLOW_NO_AUTH", raising=False)
+    r = http.get("/v1/models")
+    assert r.status_code == 503
+    assert r.json()["detail"]["error"]["type"] == "not_configured"
+    assert "DSW_API_KEY" in r.json()["detail"]["error"]["message"]
+
+
+def test_auth_is_off_only_with_an_explicit_opt_in(fake, http, monkeypatch):
+    monkeypatch.delenv("DSW_API_KEY", raising=False)
+    monkeypatch.setenv("DSW_ALLOW_NO_AUTH", "1")
     assert http.get("/v1/models").status_code == 200
+
+
+def test_healthz_stays_open_so_you_can_see_whats_wrong(fake, http, monkeypatch):
+    """healthz is the diagnostic: it must answer even when the port is unconfigured."""
+    monkeypatch.delenv("DSW_API_KEY", raising=False)
+    monkeypatch.delenv("DSW_ALLOW_NO_AUTH", raising=False)
+    assert http.get("/healthz").status_code == 200
 
 
 # --- health & models -------------------------------------------------------

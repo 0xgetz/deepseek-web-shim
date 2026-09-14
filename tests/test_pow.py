@@ -75,12 +75,25 @@ def _challenge(planted: int, diff: int = 500) -> dict:
 
 
 def test_answers_via_whichever_backend_is_available(monkeypatch, tmp_path):
-    # force the pure path: no wasm anywhere
-    monkeypatch.setenv("DSW_WASM", str(tmp_path / "absent.wasm"))
+    # force the pure path even if a fetched module sits in the working tree
+    monkeypatch.setenv("DSW_POW_BACKEND", "pure")
     monkeypatch.chdir(tmp_path)
     s = PowSolver()
     assert s.backend == "pure"
     assert s.answer(_challenge(42)) == 42
+
+
+def test_pow_backend_pure_overrides_a_present_wasm_module(monkeypatch, tmp_path):
+    """A fetched module must not defeat the pin: --selftest has to stay reproducible."""
+    fake = tmp_path / "wasm" / "sha3_wasm_bg.wasm"
+    fake.parent.mkdir(parents=True)
+    fake.write_bytes(b"not really wasm")
+    monkeypatch.setenv("DSW_WASM", str(fake))
+    monkeypatch.setenv("DSW_POW_BACKEND", "pure")
+    assert PowSolver().backend == "pure"
+    monkeypatch.delenv("DSW_POW_BACKEND")
+    # without the pin the module is attempted (and rejected here, so it falls back)
+    assert PowSolver().backend == "pure"
 
 
 def test_both_backends_agree_when_wasm_is_available():

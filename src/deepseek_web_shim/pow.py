@@ -174,8 +174,14 @@ def _find_wasm() -> str | None:
 
     Point ``DSW_WASM`` at a copy you obtained yourself (see
     ``scripts/fetch_wasm.py``), or drop it at ``wasm/sha3_wasm_bg.wasm``.
-    Without it the pure-Python backend runs — same digests, slower.
+    Without it the pure-Python backend runs, same digests, slower.
+
+    Set ``DSW_POW_BACKEND=pure`` to use the pure-Python backend even when a
+    module is present. That is how the offline suite pins one backend
+    regardless of what happens to be sitting in your working tree.
     """
+    if os.environ.get("DSW_POW_BACKEND", "").strip().lower() == "pure":
+        return None
     for cand in (
         os.environ.get("DSW_WASM"),
         str(Path.cwd() / "wasm" / "sha3_wasm_bg.wasm"),

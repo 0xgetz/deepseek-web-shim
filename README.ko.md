@@ -7,7 +7,7 @@
     <a href="https://github.com/0xgetz/deepseek-web-shim/releases"><img src="https://img.shields.io/github/v/release/0xgetz/deepseek-web-shim?style=flat-square" alt="릴리스"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3fb950?style=flat-square" alt="MIT 라이선스"></a>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square" alt="Python 3.9+"></a>
-    <a href="tests"><img src="https://img.shields.io/badge/tests-51%20offline-2ea44f?style=flat-square" alt="오프라인 테스트 51개"></a>
+    <a href="tests"><img src="https://img.shields.io/badge/tests-54%20offline-2ea44f?style=flat-square" alt="오프라인 테스트 54개"></a>
   </p>
   <p>
     <a href="README.md">English</a> ·
@@ -87,7 +87,7 @@ OpenAI 호환 클라이언트를 `http://127.0.0.1:8712/v1`로 향하게 하세�
 ## 직접 검증하기
 
 ```bash
-PYTHONPATH=src python -m pytest tests/ -q          # 51 passed, 1 skipped, 0 failed
+PYTHONPATH=src python -m pytest tests/ -q          # 54 passed, 1 skipped, 0 failed
 PYTHONPATH=src python -m deepseek_web_shim --selftest
 # {"backend":"pure","planted":11,"pure_answer":11,"match":true}
 ```
@@ -101,6 +101,7 @@ Python 해시를 DeepSeek의 wasm 오라클과 대조하려면 그 모듈을 직
 
 ```bash
 python scripts/fetch_wasm.py                       # 받은 sha256을 기록합니다
+python scripts/fetch_wasm.py --file ~/Downloads/sha3_wasm_bg.7b9ca65ddd.wasm   # 이미 가진 사본을 써도 됩니다
 PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.py
 ```
 
@@ -120,11 +121,13 @@ PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.p
 
 | 변수 | 의미 |
 | --- | --- |
-| `DSW_API_KEY` | 클라이언트가 제시해야 하는 키. 미설정이면 인증 없음 (localhost 전용) |
+| `DSW_API_KEY` | 클라이언트가 제시해야 하는 키. 필수입니다. 이 포트가 당신 세션 앞단이기 때문입니다 |
+| `DSW_ALLOW_NO_AUTH` | `1`로 설정하면 의도적으로 키 없이 실행합니다 (루프백 전용) |
 | `DSW_HOST` / `DSW_PORT` | 바인드 주소, 기본 `127.0.0.1:8712` |
 | `DS_TOKEN` | DeepSeek bearer 토큰, `--session`의 대안 |
 | `DSW_STATE_DIR` | 캡처한 세션을 저장하는 위치 |
 | `DSW_WASM` | 선택적 wasm 모듈 경로 |
+| `DSW_POW_BACKEND` | `pure`로 설정하면 모듈이 있어도 순수 Python 백엔드를 강제합니다 |
 | `DS_PROXY` | IP가 거부될 때 송신 구간에 쓸 주거용 프록시 |
 
 ## 사용하기 전에 읽어 주세요
@@ -148,7 +151,7 @@ PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.p
 ```
 src/deepseek_web_shim/   pow.py (검증된 해시와 탐색), client.py (웹 흐름),
                          server.py (OpenAI 심), config.py, __main__.py (CLI)
-tests/                   오프라인 테스트 51개
+tests/                   오프라인 테스트 54개
 research/                결론을 뒷받침하는 스크립트, 헛다리도 포함
 docs/                    protocol.md, intended-use.md
 scripts/fetch_wasm.py    선택적 wasm 가져오기 스크립트, sha256을 출력합니다

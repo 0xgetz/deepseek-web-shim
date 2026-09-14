@@ -68,9 +68,36 @@ def client() -> DeepSeekWeb:
     return c
 
 
+def _truthy(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in ("1", "true", "yes", "on")
+
+
 def _auth(authorization: str | None) -> None:
+    """Bearer guard.
+
+    ``DSW_API_KEY`` is the key clients must present. Leaving it unset runs with
+    no auth, which is only safe on loopback, so that combination requires an
+    explicit ``DSW_ALLOW_NO_AUTH=1``: one environment variable is a thin thing
+    to stand between a captured DeepSeek session and everyone who can reach the
+    port, and this default should not depend on a human reading a comment.
+    """
     want = os.environ.get("DSW_API_KEY")
     if not want:
+        if not _truthy("DSW_ALLOW_NO_AUTH"):
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "error": {
+                        "message": (
+                            "no DSW_API_KEY set; this shim proxies your own DeepSeek session. "
+                            "Set DSW_API_KEY=<any secret> and send it as "
+                            "'Authorization: Bearer <secret>', or set DSW_ALLOW_NO_AUTH=1 if you "
+                            "really want an unauthenticated port."
+                        ),
+                        "type": "not_configured",
+                    }
+                },
+            )
         return
     if authorization != f"Bearer {want}":
         raise HTTPException(status_code=401, detail={"error": {"message": "invalid api key"}})

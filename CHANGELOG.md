@@ -6,6 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-14
+
+### Fixed
+- `scripts/fetch_wasm.py` pointed at mirrors that had gone away, so the optional
+  wasm path could not be fetched at all. It now follows a Git LFS pointer when a
+  mirror stores the module through LFS (a raw URL returns a 130-byte text
+  pointer, not the artifact), and it gained `--file` so an existing copy works
+  with no network.
+- The documented way to pin the backend, `DSW_WASM=<a path that does not exist>`,
+  stopped working once a fetched module sat in `wasm/`: auto-discovery found it
+  and the "pure backend" command silently ran wasm instead. Added
+  `DSW_POW_BACKEND=pure` and switched the suite to it.
+
+### Changed
+- Running without `DSW_API_KEY` now refuses with `503 not_configured` instead of
+  serving unauthenticated. A local port that proxies your own DeepSeek session
+  should not be open because a comment said "localhost only". Set
+  `DSW_ALLOW_NO_AUTH=1` to opt out deliberately. `/healthz` stays open so you can
+  still see what is wrong.
+- Fetched module now reports whether it MATCHES or DIFFERS from the build this
+  project's digests were pinned against, and exits non-zero when it differs.
+- Test suite: 54 tests. Both backends are covered whether or not the module is
+  present.
+
 ## [0.1.0] - 2026-09-14
 
 ### Added
@@ -20,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   local PoW, `chat/completion` SSE, cookie and proxy support.
 - CLI: `--selftest`, `--serve`, `--session FILE`.
 - `x-ds-pow-response` header encoding (base64 JSON of the challenge contract).
-- Offline test suite: 51 tests, no network, wasm optional.
+- Offline test suite: 54 tests, no network, wasm optional.
 - Documentation: protocol notes and an intended-use / ethics note.
 
 ### Notes

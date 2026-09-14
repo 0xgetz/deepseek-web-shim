@@ -7,7 +7,7 @@
     <a href="https://github.com/0xgetz/deepseek-web-shim/releases"><img src="https://img.shields.io/github/v/release/0xgetz/deepseek-web-shim?style=flat-square" alt="リリース"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3fb950?style=flat-square" alt="MIT ライセンス"></a>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square" alt="Python 3.9+"></a>
-    <a href="tests"><img src="https://img.shields.io/badge/tests-51%20offline-2ea44f?style=flat-square" alt="51 件のオフラインテスト"></a>
+    <a href="tests"><img src="https://img.shields.io/badge/tests-54%20offline-2ea44f?style=flat-square" alt="54 件のオフラインテスト"></a>
   </p>
   <p>
     <a href="README.md">English</a> ·
@@ -87,7 +87,7 @@ OpenAI 互換のクライアントを `http://127.0.0.1:8712/v1` に向けてく
 ## 自分で検証する
 
 ```bash
-PYTHONPATH=src python -m pytest tests/ -q          # 51 passed, 1 skipped, 0 failed
+PYTHONPATH=src python -m pytest tests/ -q          # 54 passed, 1 skipped, 0 failed
 PYTHONPATH=src python -m deepseek_web_shim --selftest
 # {"backend":"pure","planted":11,"pure_answer":11,"match":true}
 ```
@@ -101,6 +101,7 @@ Python のハッシュを DeepSeek の wasm オラクルと突き合わせるに
 
 ```bash
 python scripts/fetch_wasm.py                       # 取得した sha256 を記録します
+python scripts/fetch_wasm.py --file ~/Downloads/sha3_wasm_bg.7b9ca65ddd.wasm   # すでに手元にあるコピーでも可
 PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.py
 ```
 
@@ -120,11 +121,13 @@ PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.p
 
 | 変数 | 意味 |
 | --- | --- |
-| `DSW_API_KEY` | クライアントが提示すべきキー。未設定なら認証なし（localhost 専用） |
+| `DSW_API_KEY` | クライアントが提示すべきキー。必須です。このポートはあなたのセッションの前段だからです |
+| `DSW_ALLOW_NO_AUTH` | `1` にすると意図的に鍵なしで動かします（ループバック限定） |
 | `DSW_HOST` / `DSW_PORT` | バインド先、既定は `127.0.0.1:8712` |
 | `DS_TOKEN` | DeepSeek の bearer token、`--session` の代替 |
 | `DSW_STATE_DIR` | 取得したセッションの保存先 |
 | `DSW_WASM` | 任意の wasm モジュールへのパス |
+| `DSW_POW_BACKEND` | `pure` にするとモジュールがあっても純 Python バックエンドを強制します |
 | `DS_PROXY` | 送信側を住宅プロキシ経由にする（IP が拒否される場合） |
 
 ## 使う前に読んでください
@@ -149,7 +152,7 @@ Web インターフェースへの自動アクセスは、そのサービスの�
 ```
 src/deepseek_web_shim/   pow.py（検証済みのハッシュと探索）、client.py（Web フロー）、
                          server.py（OpenAI シム）、config.py、__main__.py（CLI）
-tests/                   51 件のオフラインテスト
+tests/                   54 件のオフラインテスト
 research/                結論を支えるスクリプト群、回り道も含めて
 docs/                    protocol.md、intended-use.md
 scripts/fetch_wasm.py    任意の wasm 取得スクリプト、sha256 を表示します

@@ -7,7 +7,7 @@
     <a href="https://github.com/0xgetz/deepseek-web-shim/releases"><img src="https://img.shields.io/github/v/release/0xgetz/deepseek-web-shim?style=flat-square" alt="rilis"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3fb950?style=flat-square" alt="lisensi MIT"></a>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.9%2B-blue?style=flat-square" alt="Python 3.9+"></a>
-    <a href="tests"><img src="https://img.shields.io/badge/tests-51%20offline-2ea44f?style=flat-square" alt="51 tes offline"></a>
+    <a href="tests"><img src="https://img.shields.io/badge/tests-54%20offline-2ea44f?style=flat-square" alt="54 tes offline"></a>
   </p>
   <p>
     <a href="README.md">English</a> ·
@@ -87,7 +87,7 @@ Arahkan klien kompatibel OpenAI mana pun ke `http://127.0.0.1:8712/v1`.
 ## Buktikan sendiri
 
 ```bash
-PYTHONPATH=src python -m pytest tests/ -q          # 51 passed, 1 skipped, 0 failed
+PYTHONPATH=src python -m pytest tests/ -q          # 54 passed, 1 skipped, 0 failed
 PYTHONPATH=src python -m deepseek_web_shim --selftest
 # {"backend":"pure","planted":11,"pure_answer":11,"match":true}
 ```
@@ -102,6 +102,7 @@ itu (di sini **tidak** didistribusikan) lalu jalankan ulang:
 
 ```bash
 python scripts/fetch_wasm.py                       # mencatat sha256 yang didapat
+python scripts/fetch_wasm.py --file ~/Downloads/sha3_wasm_bg.7b9ca65ddd.wasm   # atau pakai salinan yang sudah Anda punya
 PYTHONPATH=src DSW_WASM=wasm/sha3_wasm_bg.wasm python -m pytest tests/test_pow.py
 ```
 
@@ -122,11 +123,13 @@ Semuanya lewat environment, tidak pernah ikut ter-commit. Lihat
 
 | Variabel | Arti |
 | --- | --- |
-| `DSW_API_KEY` | kunci yang harus dibawa klien; kosong berarti tanpa auth (khusus localhost) |
+| `DSW_API_KEY` | kunci yang harus dibawa klien; wajib, karena port ini di depan sesi Anda |
+| `DSW_ALLOW_NO_AUTH` | set ke `1` untuk sengaja jalan tanpa kunci, loopback saja |
 | `DSW_HOST` / `DSW_PORT` | alamat bind, default `127.0.0.1:8712` |
 | `DS_TOKEN` | token bearer DeepSeek, alternatif dari `--session` |
 | `DSW_STATE_DIR` | tempat sesi yang ditangkap disimpan |
 | `DSW_WASM` | path ke modul wasm opsional |
+| `DSW_POW_BACKEND` | set ke `pure` untuk memaksa backend Python murni walau modulnya ada |
 | `DS_PROXY` | proxy residensial untuk leg keluar, jika IP Anda ditolak |
 
 ## Baca ini sebelum memakainya
@@ -150,7 +153,7 @@ terdokumentasi, didukung, dan menghapus semua catatan di halaman ini.
 ```
 src/deepseek_web_shim/   pow.py (hash + pencarian terverifikasi), client.py (alur web),
                          server.py (shim OpenAI), config.py, __main__.py (CLI)
-tests/                   51 tes offline
+tests/                   54 tes offline
 research/                skrip di balik kesimpulannya, termasuk jalan yang salah
 docs/                    protocol.md, intended-use.md
 scripts/fetch_wasm.py    pengambil wasm opsional, mencetak sha256-nya
