@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="deepseek-web-shim logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#0b1220"/>
+    </linearGradient>
+    <linearGradient id="fg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5eead4"/>
+      <stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="512" height="512" rx="104" fill="url(#bg)"/>
+
+  <!-- shim brackets: something passing through something -->
+  <g stroke="url(#fg)" stroke-width="18" stroke-linecap="round" fill="none">
+    <path d="M186 150 L132 150 Q110 150 110 172 L110 340 Q110 362 132 362 L186 362"/>
+    <path d="M326 150 L380 150 Q402 150 402 172 L402 340 Q402 362 380 362 L326 362"/>
+  </g>
+
+  <!-- the digest: a hash grid with one node found -->
+  <g fill="#1f2937">
+    <rect x="196" y="176" width="34" height="34" rx="8"/>
+    <rect x="238" y="176" width="34" height="34" rx="8"/>
+    <rect x="280" y="176" width="34" height="34" rx="8"/>
+    <rect x="196" y="218" width="34" height="34" rx="8"/>
+    <rect x="280" y="218" width="34" height="34" rx="8"/>
+    <rect x="196" y="260" width="34" height="34" rx="8"/>
+    <rect x="238" y="260" width="34" height="34" rx="8"/>
+    <rect x="280" y="260" width="34" height="34" rx="8"/>
+  </g>
+  <rect x="238" y="218" width="34" height="34" rx="8" fill="url(#fg)"/>
+
+  <!-- search sweep under the grid -->
+  <rect x="176" y="318" width="160" height="12" rx="6" fill="#1f2937"/>
+  <rect x="176" y="318" width="96" height="12" rx="6" fill="url(#fg)"/>
+</svg>

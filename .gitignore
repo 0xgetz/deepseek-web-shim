@@ -1,0 +1,25 @@
+# secrets and captured sessions: never commit these
+.env
+state/
+session.json
+*.token
+cookies*.txt
+
+# DeepSeek's wasm module is fetched, not vendored
+wasm/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# editors / os
+.idea/
+.vscode/
+.DS_Store
